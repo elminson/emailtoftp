@@ -1,2 +1,2 @@
 # emailtoftp
-Upload files to ftp using email
+ Upload files to ftp using email
