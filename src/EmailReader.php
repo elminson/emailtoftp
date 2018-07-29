@@ -1,6 +1,8 @@
 <?php
 
-class Email_reader
+namespace Elminson\EmailTopFtp;
+
+class EmailReader
 {
 
     // imap server connection
@@ -11,16 +13,40 @@ class Email_reader
     private $msg_cnt;
 
     // email login credentials
-    private $server = 'yourserver.com';
-    private $user = 'email@yourserver.com';
-    private $pass = 'yourpassword';
+    private $server = null;
+    private $user = null;
+    private $pass = null;
     private $port = 143; // adjust according to server settings
 
     // connect to the server and get the inbox emails
-    function __construct()
+    /**
+     * EmailReader constructor.
+     * @param array $config
+     * @throws \Exception
+     */
+    function __construct($config = [])
     {
+        $this->setup($config);
         $this->connect();
         $this->inbox();
+    }
+
+    /**
+     * @param array $config
+     * @throws \Exception
+     */
+    function setup($config = [])
+    {
+        if (count($config) < 4) {
+            throw  new \Exception("Setup is not completed!" . count($config));
+        }
+        $this->server = (isset($config['server'])) ? $config['server'] : null;
+        $this->user = (isset($config['user'])) ? $config['user'] : null;
+        $this->pass = (isset($config['pass'])) ? $config['pass'] : null;
+        $this->port = (isset($config['port'])) ? $config['port'] : 143;
+        if ($this->server == null || $this->user == null || !$this->pass == null) {
+            throw  new \Exception("Setup is not completed!");
+        }
     }
 
     // close the server connection
@@ -35,9 +61,19 @@ class Email_reader
     // open the server connection
     // the imap_open function parameters will need to be changed for the particular server
     // these are laid out to connect to a Dreamhost IMAP server
+    /**
+     * @throws \Exception
+     */
     function connect()
     {
-        $this->conn = imap_open('{' . $this->server . '/notls}', $this->user, $this->pass);
+        //$this->conn = imap_open('{' . $this->server . ':' . $this->port . '/imap/ssl}INBOX', $this->user,
+        $this->conn = imap_open('{' . $this->server . ':' . $this->port . '}INBOX', $this->user,
+            $this->pass);
+        $error = imap_errors();
+        $alerts = imap_alerts();
+        if (isset($error[0])) {
+            throw new \Exception($error[0]);
+        }
     }
 
     // move the message to a new folder
@@ -79,6 +115,32 @@ class Email_reader
         }
 
         $this->inbox = $in;
+    }
+
+    function getEmails()
+    {
+        $emails = imap_search($this->inbox, 'ALL');
+        /* useful only if the above search is set to 'ALL' */
+        $max_emails = 16;
+        /* if any emails found, iterate through each email */
+        if ($emails) {
+            $count = 1;
+            /* put the newest emails on top */
+            rsort($emails);
+            /* for every email... */
+            foreach ($emails as $email_number) {
+                /* get information specific to this email */
+                $overview = imap_fetch_overview($this->inbox, $email_number, 0);
+                /* get mail message */
+                $message = imap_fetchbody($this->inbox, $email_number, 2);
+                echo $message;
+
+                if ($count++ >= $max_emails) {
+                    break;
+                }
+            }
+        }
+
     }
 
     function email_pull()
