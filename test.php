@@ -5,9 +5,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 try {
     $config = [
-        'server' => '67.222.134.19',
-        'user' => 'emailtoftp@rlist.net',
-        'password' => 'KF4zp7IX1a',
+        'server' => 'domain.net',
+        'user' => 'emailtoftp@domain.net',
+        'password' => '',
         'port' => 993
     ];
     $email = new Emailreader($config);
