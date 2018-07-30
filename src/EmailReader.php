@@ -25,7 +25,6 @@ class EmailReader
     private $encryption = null;
     private $validCredential = null;
     private $upload_folder = null;
-    private $port = 143; // adjust according to server settings
     private $ftp = null; // adjust according to server settings
     private $host = null; // adjust according to server settings
     private $userftp = null; // adjust according to server settings
