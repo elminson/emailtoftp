@@ -32,3 +32,9 @@ Server need lib imap_open enable
 $email = new Emailreader($config);
 echo "Total Files Uploaded : ".$email->total_files;
 ```
+
+#Dependencies
+```php
+"ssilence/php-imap-client": "dev-master",
+"nicolab/php-ftp-client": "^1.4"
+```
