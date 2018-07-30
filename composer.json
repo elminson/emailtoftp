@@ -19,5 +19,6 @@
             "email": "edeoleo@gmail.com"
         }
     ],
-    "minimum-stability": "alpha"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
