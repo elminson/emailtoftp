@@ -90,19 +90,11 @@ class EmailReader
      */
     function readUploadFiles()
     {
-
         //need a cleanup
         //MOVE EMAIL AFTER UPLOAD
-        //$emails = $this->conn->getUnreadMessages(true);
-//        print_r($emails);
-//        exit(0);
         $all_attachments = [];
         foreach ($this->conn->getMessages() as $message) {
-          //move email to read
-            //  $this->move($message->id);
             if ($this->getEmail($message->header->from) == $this->validCredential) {
-//                var_dump($message->header->subject);
-//                var_dump($message->header->from);
                 //MOVE MSGNO
                 //print_r($message->header->msgno);
                 //$this->conn->moveMessage($message->header->msgno,"EMAILTOFTP");
@@ -115,6 +107,10 @@ class EmailReader
         $this->uploadFiles($all_attachments);
     }
 
+    /**
+     * @param $email
+     * @return mixed
+     */
     function getEmail($email)
     {
         preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $email, $matches);
@@ -159,6 +155,11 @@ class EmailReader
     }
 
     // move the message to a new folder
+
+    /**
+     * @param $msg_index
+     * @param string $folder
+     */
     function move($msg_index, $folder = 'INBOX.Processed')
     {
         // move on server
@@ -170,6 +171,11 @@ class EmailReader
     }
 
     // get a specific message (1 = first email, 2 = second email, etc.)
+
+    /**
+     * @param null $msg_index
+     * @return array
+     */
     function get($msg_index = null)
     {
         if (count($this->inbox) <= 0) {
@@ -182,6 +188,10 @@ class EmailReader
     }
 
     // read the inbox
+
+    /**
+     *
+     */
     function inbox()
     {
         $this->msg_cnt = imap_num_msg($this->conn);
@@ -199,6 +209,9 @@ class EmailReader
         $this->inbox = $in;
     }
 
+    /**
+     *
+     */
     function getEmails()
     {
         $emails = imap_search($this->inbox, 'ALL');
