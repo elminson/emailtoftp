@@ -3,7 +3,9 @@
     "description": "Email to FPT",
     "type": "project",
     "require": {
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "ssilence/php-imap-client": "dev-master",
+        "nicolab/php-ftp-client": "^1.4"
     },
     "require-dev": {
         "phpmailer/phpmailer": "^6.0"

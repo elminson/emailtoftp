@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7bd344fd0ab095115447da714596b3f",
+    "content-hash": "39cfc7cd7420353135f5126a1878df83",
     "packages": [
+        {
+            "name": "nicolab/php-ftp-client",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nicolab/php-ftp-client.git",
+                "reference": "0e0c7666bdc3fb9fc9e63b065c84979588101708"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nicolab/php-ftp-client/zipball/0e0c7666bdc3fb9fc9e63b065c84979588101708",
+                "reference": "0e0c7666bdc3fb9fc9e63b065c84979588101708",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FtpClient": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Tallefourtane",
+                    "email": "dev@nicolab.net",
+                    "homepage": "http://nicolab.net"
+                }
+            ],
+            "description": "A flexible FTP and SSL-FTP client for PHP. This lib provides helpers easy to use to manage the remote files.",
+            "homepage": "https://github.com/Nicolab/php-ftp-client",
+            "keywords": [
+                "file",
+                "ftp",
+                "helper",
+                "lib",
+                "server",
+                "sftp",
+                "ssl",
+                "ssl-ftp"
+            ],
+            "time": "2017-01-20T06:44:54+00:00"
+        },
         {
             "name": "phpmailer/phpmailer",
             "version": "v6.0.5",
@@ -71,12 +119,131 @@
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "time": "2018-03-27T13:49:45+00:00"
+        },
+        {
+            "name": "ssilence/php-imap-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SSilence/php-imap-client.git",
+                "reference": "a897a58f99638ab60536e947073d497e8154cb12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SSilence/php-imap-client/zipball/a897a58f99638ab60536e947073d497e8154cb12",
+                "reference": "a897a58f99638ab60536e947073d497e8154cb12",
+                "shasum": ""
+            },
+            "require": {
+                "ext-imap": "*",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SSilence\\ImapClient\\": "ImapClient"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SSilence",
+                    "email": "tobias.zeising@aditu.de",
+                    "homepage": "https://github.com/SSilence",
+                    "role": "Founder"
+                },
+                {
+                    "name": "xXXIMMATTEWXXx",
+                    "email": "mattparksjr@gmail.com",
+                    "homepage": "http://matthewp.lexium.xyz/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "sergey144010",
+                    "homepage": "https://github.com/sergey144010",
+                    "role": "Developer"
+                },
+                {
+                    "name": "natanfelles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io",
+                    "role": "Developer"
+                },
+                {
+                    "name": "developarts",
+                    "email": "nexus@developarts.com",
+                    "homepage": "http://www.developarts.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "dutchakdev",
+                    "email": "dutchakdev@gmail.com",
+                    "homepage": "http://dutchak.io/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "HenriqueSalvan",
+                    "email": "henriquesalvan@gmail.com",
+                    "homepage": "https://github.com/HenriqueSalvan",
+                    "role": "Developer"
+                },
+                {
+                    "name": "melcak",
+                    "email": "jiri@plugo.cz",
+                    "homepage": "http://www.plugo.cz",
+                    "role": "Developer"
+                },
+                {
+                    "name": "fulldecent",
+                    "email": "github.com@phor.net",
+                    "homepage": "http://phor.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "parturi",
+                    "homepage": "https://github.com/parturi",
+                    "role": "Developer"
+                },
+                {
+                    "name": "tomjoad2000",
+                    "homepage": "https://github.com/tomjoad2000",
+                    "role": "Developer"
+                },
+                {
+                    "name": "radub",
+                    "homepage": "https://github.com/radub",
+                    "role": "Developer"
+                },
+                {
+                    "name": "russ-ab",
+                    "homepage": "https://github.com/russ-ab",
+                    "role": "Developer"
+                },
+                {
+                    "name": "wayne5w",
+                    "homepage": "https://github.com/wayne5w",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Php imap client",
+            "homepage": "https://github.com/SSilence/php-imap-client",
+            "keywords": [
+                "client",
+                "imap",
+                "php"
+            ],
+            "time": "2018-07-12T13:37:33+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "alpha",
-    "stability-flags": [],
+    "stability-flags": {
+        "ssilence/php-imap-client": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

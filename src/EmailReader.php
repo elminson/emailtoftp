@@ -2,6 +2,12 @@
 
 namespace Elminson\EmailTopFtp;
 
+use FtpClient\FtpClient;
+use phpseclib\Net\SFTP;
+use SSilence\ImapClient\ImapClientException;
+use SSilence\ImapClient\ImapConnect;
+use SSilence\ImapClient\ImapClient as Imap;
+
 class EmailReader
 {
 
@@ -15,10 +21,19 @@ class EmailReader
     // email login credentials
     private $server = null;
     private $user = null;
-    private $pass = null;
+    private $password = null;
+    private $encryption = null;
+    private $validCredential = null;
+    private $upload_folder = null;
     private $port = 143; // adjust according to server settings
+    private $ftp = null; // adjust according to server settings
+    private $host = null; // adjust according to server settings
+    private $userftp = null; // adjust according to server settings
+    private $passwordftp = null; // adjust according to server settings
+    public $total_files = 0;
 
     // connect to the server and get the inbox emails
+
     /**
      * EmailReader constructor.
      * @param array $config
@@ -26,9 +41,10 @@ class EmailReader
      */
     function __construct($config = [])
     {
+        $this->encryption = ImapConnect::ENCRYPT_SSL;
         $this->setup($config);
         $this->connect();
-        $this->inbox();
+        $this->readUploadFiles();
     }
 
     /**
@@ -37,15 +53,26 @@ class EmailReader
      */
     function setup($config = [])
     {
-        if (count($config) < 4) {
-            throw  new \Exception("Setup is not completed!" . count($config));
-        }
-        $this->server = (isset($config['server'])) ? $config['server'] : null;
-        $this->user = (isset($config['user'])) ? $config['user'] : null;
-        $this->pass = (isset($config['pass'])) ? $config['pass'] : null;
-        $this->port = (isset($config['port'])) ? $config['port'] : 143;
-        if ($this->server == null || $this->user == null || !$this->pass == null) {
+        $this->server = (isset($config['smtp']['server'])) ? $config['smtp']['server'] : null;
+        $this->user = (isset($config['smtp']['user'])) ? $config['smtp']['user'] : null;
+        $this->password = (isset($config['smtp']['password'])) ? $config['smtp']['password'] : null;
+        $this->upload_folder = (isset($config['ftp']['upload_folder'])) ? $config['ftp']['upload_folder'] : null;
+        $this->validCredential = (isset($config['validCredential'])) ? $config['validCredential'] : null;
+        $this->userftp = (isset($config['ftp']['userftp'])) ? $config['ftp']['userftp'] : null;
+        $this->passwordftp = (isset($config['ftp']['passwordftp'])) ? $config['ftp']['passwordftp'] : null;
+        $this->host = (isset($config['ftp']['host'])) ? $config['ftp']['host'] : null;
+        if ($this->server == null || $this->user == null || $this->password == null || $this->validCredential == null) {
             throw  new \Exception("Setup is not completed!");
+        }
+    }
+
+    function connect()
+    {
+        try {
+            $this->conn = new Imap($this->server, $this->user, $this->password, $this->encryption);
+        } catch (ImapClientException $error) {
+            echo $error->getMessage() . PHP_EOL;
+            die(); // Oh no :( we failed
         }
     }
 
@@ -58,22 +85,77 @@ class EmailReader
         imap_close($this->conn);
     }
 
-    // open the server connection
-    // the imap_open function parameters will need to be changed for the particular server
-    // these are laid out to connect to a Dreamhost IMAP server
     /**
+     * @throws \FtpClient\FtpException
+     */
+    function readUploadFiles()
+    {
+
+        //need a cleanup
+        //MOVE EMAIL AFTER UPLOAD
+        //$emails = $this->conn->getUnreadMessages(true);
+//        print_r($emails);
+//        exit(0);
+        $all_attachments = [];
+        foreach ($this->conn->getMessages() as $message) {
+          //move email to read
+            //  $this->move($message->id);
+            if ($this->getEmail($message->header->from) == $this->validCredential) {
+//                var_dump($message->header->subject);
+//                var_dump($message->header->from);
+                //MOVE MSGNO
+                //print_r($message->header->msgno);
+                //$this->conn->moveMessage($message->header->msgno,"EMAILTOFTP");
+                foreach ($message->attachments as $attachment) {
+                    file_put_contents("tmp/" . $attachment->name, $attachment->body);
+                    $all_attachments[] = $attachment->name;
+                }
+            }
+        }
+        $this->uploadFiles($all_attachments);
+    }
+
+    function getEmail($email)
+    {
+        preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $email, $matches);
+        return $matches[0][0];
+
+    }
+
+    /**
+     * @param $attachments_name
+     * @throws \FtpClient\FtpException
+     */
+    function uploadFiles($attachments)
+    {
+        //Upload file
+        $this->setupFtp();
+        if (!$this->ftp->isDir($this->upload_folder)) {
+            $this->ftp->mkdir($this->upload_folder, true);
+        }
+
+        foreach ($attachments as $attachment) {
+            $this->ftp->put('tmp/' . $attachment, 'tmp/' . $attachment, true, 1);
+            $this->total_files++;
+        }
+        $this->ftp->close();
+    }
+
+    /**
+     * @throws \FtpClient\FtpException
      * @throws \Exception
      */
-    function connect()
+    function setupFtp()
     {
-        //$this->conn = imap_open('{' . $this->server . ':' . $this->port . '/imap/ssl}INBOX', $this->user,
-        $this->conn = imap_open('{' . $this->server . ':' . $this->port . '}INBOX', $this->user,
-            $this->pass);
-        $error = imap_errors();
-        $alerts = imap_alerts();
-        if (isset($error[0])) {
-            throw new \Exception($error[0]);
+        $this->ftp = new FtpClient();
+        $this->ftp->connect($this->host);
+        try {
+            $this->ftp->login($this->userftp, $this->passwordftp);
+        } catch (\Exception $e) {
+
+            throw new \Exception($e->getMessage());
         }
+
     }
 
     // move the message to a new folder
