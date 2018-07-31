@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "phpmailer/phpmailer": "^6.0",
-        "nicolab/php-ftp-client": "^1.4"
+        "nicolab/php-ftp-client": "^1.4",
+        "ssilence/php-imap-client" : "dev-master"
     },
     "autoload": {
         "psr-4": {
