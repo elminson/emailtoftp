@@ -42,7 +42,12 @@ class EmailReader
     {
         $this->encryption = ImapConnect::ENCRYPT_SSL;
         $this->setup($config);
-        $this->connect();
+        try {
+            @$this->connect();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage() . PHP_EOL);
+        }
+
         $this->readUploadFiles();
     }
 
