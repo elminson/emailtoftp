@@ -55,7 +55,7 @@ class EmailReader
      * @param array $config
      * @throws \Exception
      */
-    function setup($config = [])
+    private function setup($config = [])
     {
         $this->server = (isset($config['smtp']['server'])) ? $config['smtp']['server'] : null;
         $this->user = (isset($config['smtp']['user'])) ? $config['smtp']['user'] : null;
@@ -70,7 +70,7 @@ class EmailReader
         }
     }
 
-    function connect()
+    private function connect()
     {
         try {
             $this->conn = new Imap($this->server, $this->user, $this->password, $this->encryption);
@@ -81,7 +81,7 @@ class EmailReader
     }
 
     // close the server connection
-    function close()
+    private function close()
     {
         $this->inbox = array();
         $this->msg_cnt = 0;
@@ -92,7 +92,7 @@ class EmailReader
     /**
      * @throws \FtpClient\FtpException
      */
-    function readUploadFiles()
+    private function readUploadFiles()
     {
         //need a cleanup
         //MOVE EMAIL AFTER UPLOAD
@@ -115,7 +115,7 @@ class EmailReader
      * @param $email
      * @return mixed
      */
-    function getEmail($email)
+    private function getEmail($email)
     {
         preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $email, $matches);
         return $matches[0][0];
@@ -126,7 +126,7 @@ class EmailReader
      * @param $attachments_name
      * @throws \FtpClient\FtpException
      */
-    function uploadFiles($attachments)
+    private function uploadFiles($attachments)
     {
         //Upload file
         $this->setupFtp();
@@ -145,7 +145,7 @@ class EmailReader
      * @throws \FtpClient\FtpException
      * @throws \Exception
      */
-    function setupFtp()
+    private function setupFtp()
     {
         $this->ftp = new FtpClient();
         $this->ftp->connect($this->host);
@@ -164,7 +164,7 @@ class EmailReader
      * @param $msg_index
      * @param string $folder
      */
-    function move($msg_index, $folder = 'INBOX.Processed')
+    private function move($msg_index, $folder = 'INBOX.Processed')
     {
         // move on server
         imap_mail_move($this->conn, $msg_index, $folder);
@@ -180,7 +180,7 @@ class EmailReader
      * @param null $msg_index
      * @return array
      */
-    function get($msg_index = null)
+    private function get($msg_index = null)
     {
         if (count($this->inbox) <= 0) {
             return array();
@@ -196,7 +196,7 @@ class EmailReader
     /**
      *
      */
-    function inbox()
+    private function inbox()
     {
         $this->msg_cnt = imap_num_msg($this->conn);
 
@@ -216,7 +216,7 @@ class EmailReader
     /**
      *
      */
-    function getEmails()
+    private function getEmails()
     {
         $emails = imap_search($this->inbox, 'ALL');
         /* useful only if the above search is set to 'ALL' */
